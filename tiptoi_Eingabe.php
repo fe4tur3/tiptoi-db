@@ -67,6 +67,24 @@ $themen = $conn->query("SELECT * FROM thema");                          // alle 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tiptoi media</title>
+
+    <style>
+
+        /* In der tiptoi_Eingabe.php einfügen */
+    button[type="submit"] {
+    background-color: #000000;
+    color: #bf00ff;
+    border: 3px solid #bf00ff;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #6a0dad;
+}
+
+    </style>
 </head>
 <body>
     <h1>Tiptoi Medienverwaltung </h1>

@@ -207,17 +207,62 @@ $result = $conn->query($sql);
         
             // --- START THEMEN-LOGIK ---
             echo "<td>";
+
             $themen_sql = "SELECT thema.name, thema.ID 
                            FROM thema 
                            JOIN buch_thema ON thema.ID = buch_thema.thema_id 
                            WHERE buch_thema.buch_id = $buch_id";
-            
             $themen_res = $conn->query($themen_sql);
             
             $themen_links = [];
             while($t_row = $themen_res->fetch_assoc()) {
-                $themen_links[] = '<a href="index.php?thema=' . $t_row['ID'] . '">' . htmlspecialchars($t_row['name']) . '</a>';
+                $thema_name = $t_row['name'];
+                
+                // SCHRITT A: Das "&" für die Suche entfernen/ersetzen
+                // Wir machen aus "Kochen & Basteln" -> "Kochen Basteln"
+                $suche_sauber = str_replace('&', '', $thema_name);
+                
+                $zusatz = "";
+            
+                // SCHRITT B: Die verfeinerten Suchkriterien (Switch-Block)
+                switch ($thema_name) {
+                    case 'Einsatzteams': 
+                        $zusatz = "Polizei Feuerwehr Rettung"; break;
+                    case 'Tiere': 
+                        $zusatz = "Bauernhof Zoo Safari Dschungel"; break;
+                    case 'Alltag': 
+                        $zusatz = "Zuhause Schule Kindergarten"; break;
+                    case 'Fahrzeuge': 
+                        $zusatz = "Autos Baustelle Rennwagen Züge"; break;
+                    case 'Wissenschaften': 
+                        $zusatz = "Weltraum Körper Experimente Technik"; break;
+                    case 'Lesen lernen': 
+                        $zusatz = "Erstleser Buchstaben Leselauscher"; break;
+                    case 'Fantasy': 
+                        $zusatz = "Drachen Elfen Einhorn Fabelwesen"; break;
+                    case 'Geschichte': 
+                        $zusatz = "Ritter Steinzeit Altes Rom Ägypten"; break;
+                    case 'Musik': 
+                        $zusatz = "Instrumente Lieder Orchester Musikschule"; break;
+                    case 'Sport': 
+                        $zusatz = "Fussball Turnen Tanzen Bewegung"; break;
+                    case 'Kochen & Basteln': 
+                        $zusatz = "Kuchen Suppen kinderleicht Schere Buntpapier Stifte"; break;
+                    case 'Länder & Kulturen': 
+                        $zusatz = "Weltatlas Europa Flaggen Weltreise"; break;
+                    case 'Zahlen & Rechnen': 
+                        $zusatz = "Zahlen Formen Geometrie Mathe"; break;
+                }
+            
+                // SCHRITT C: Den finalen Suchbegriff zusammenbauen
+                $suche_sauber = str_replace('&', '', $thema_name);
+                // trim() entfernt doppelte Leerzeichen am Anfang oder Ende
+                $suchbegriff = trim("tiptoi " . $suche_sauber . " " . $zusatz);
+                
+                // Link generieren
+                $themen_links[] = '<a href="https://www.google.com/search?q=' . urlencode($suchbegriff) . '" target="_blank">' . htmlspecialchars($thema_name) . '</a>';
             }
+            
             echo implode(", ", $themen_links);
             echo "</td>";
             // --- ENDE THEMEN-LOGIK ---
