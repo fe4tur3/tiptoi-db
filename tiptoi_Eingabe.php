@@ -16,7 +16,7 @@ if (isset($_POST['speichern'])) {                                       // exisi
     $ausgeliehen_von = $ausgeliehen == 1
     ? $conn->real_escape_string($_POST['ausgeliehen_von'])              // wenn 1, dann Wert holen
     : NULL;                                                             // sonst leer
-//   $vielfaeltigkeit = $_POST['vielfaeltigkeit'] ?: NULL;                // optional
+//   $vielfaeltigkeit = $_POST['vielfaeltigkeit'] ?: NULL;              wäre: optional
     $bewertung_eltern = !empty($_POST['bewertung_eltern']) 
     ? $conn->real_escape_string($_POST['bewertung_eltern']) 
     : NULL;                                                             // optional
@@ -67,24 +67,9 @@ $themen = $conn->query("SELECT * FROM thema");                          // alle 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tiptoi media</title>
+    
+    <link rel="stylesheet" href="css/style.css">
 
-    <style>
-
-        /* In der tiptoi_Eingabe.php einfügen */
-    button[type="submit"] {
-    background-color: #000000;
-    color: #bf00ff;
-    border: 3px solid #bf00ff;
-    border-radius: 30px;
-    padding: 10px 25px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 4px 0 #6a0dad;
-}
-
-    </style>
 </head>
 <body>
     <h1>Tiptoi Medienverwaltung </h1>
@@ -141,7 +126,7 @@ $themen = $conn->query("SELECT * FROM thema");                          // alle 
 <label>Kommentar:</label><br>
 <textarea name="kommentar" rows="3" cols="40"></textarea><br><br>
 
-<button type = "submit" name="speichern"> Speichern </button>
+<button type = "submit" name="speichern" class="speichern"> Speichern </button>
 </form>
 
 <script>                                                        // Ausgeliehen-Feld nur anzeigen, wenn "Ja" gewählt

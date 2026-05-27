@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 }
 
 // 2. Alle Bücher aus der Tabelle "buch" abrufen
-$sql = "SELECT * FROM buch ORDER BY id DESC";
+$sql = "SELECT * FROM buch ORDER BY name";                                          // Leerzeichen nicht werten (name =''),
 $result = $conn->query($sql);
 ?>
 
@@ -18,290 +18,116 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Meine Tiptoi Sammlung</title>
 
-    <style>
-    /* 1. SCHRIFTARTEN */
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@900&family=Fredoka:wght@400;700&display=swap');
+    <link rel="stylesheet" href="css/style.css">
 
-    body { 
-        font-family: 'Fredoka', sans-serif; 
-        background-color: #ffdef2; /* Rosa Hintergrund */
-        padding: 20px;
-        margin: 0;
-    }
-
-    /* 2. ÜBERSCHRIFT: Hart, Schwarz/Gelb, kein Schatten */
-    h1 { 
-        font-family: 'Fira Sans Extra Condensed', sans-serif;
-        color: #ffff00; 
-        background-color: #000000; 
-        display: block;
-        padding: 20px;
-        border: 10px solid #ffffff;
-        text-align: center;
-        font-size: 4rem;
-        text-transform: uppercase;
-        text-shadow: none; 
-        margin: 0 0 30px 0;
-    }
-
-    /* 3. TABELLE: Verspielt & Bunt */
-    table { 
-        width: 100%; 
-        border-collapse: separate; 
-        border-spacing: 0 10px;
-    }
-
-    th { 
-        background-color: #32cd32; /* Grün */
-        color: white;
-        padding: 15px;
-        border: 4px solid #ffffff;
-        text-align: left;
-        font-size: 1.4rem;
-        border-radius: 15px 15px 0 0;
-    }
-
-    td { 
-        background-color: #fff0f5; 
-        padding: 15px;
-        border-top: 5px solid #ff69b4; 
-        border-bottom: 5px solid #ff69b4; 
-        color: #333;
-        font-weight: 700;
-        font-size: 1.1rem;
-    }
-
-    tr td:first-child { border-left: 5px solid #ff69b4; border-radius: 20px 0 0 20px; }
-    tr td:last-child { border-right: 5px solid #ff69b4; border-radius: 0 20px 20px 0; }
-
-    /* 4. BUTTONS IN DER TABELLE */
-    /* Bearbeiten: Blau */
-    button[onclick*="oeffneBearbeitenModal"] {
-        background: linear-gradient(145deg, #1e90ff, #0000cd);
-        color: #ffffff;
-        cursor: pointer;
-        border: 3px solid #ffffff;
-        border-radius: 12px;
-        font-family: 'Fredoka', sans-serif;
-        font-weight: 700;
-        padding: 8px 15px;
-        box-shadow: 0 4px 0 #000080;
-    }
-
-    /* 5. HAUPT-BUTTON: Schwarz mit Lila Schrift */
-    button[onclick="oeffneModal()"], .btn-neu {
-        background-color: #000000; 
-        color: #bf00ff;           /* Kräftiges Lila */
-        cursor: pointer;
-        border: 5px solid #bf00ff; 
-        border-radius: 50px;       
-        font-family: 'Fredoka', sans-serif;
-        font-weight: 400;
-        font-size: 1.0rem;
-        margin: 5px auto;
-        display: block;
-        padding: 15px 300px;
-        text-transform: uppercase;
-        box-shadow: 0 6px 0 #6a0dad;
-        transition: all 0.2s ease;
-    }
-
-    button[onclick="oeffneModal()"]:hover {
-        transform: scale(1.05);
-        background-color: #1a1a1a;
-    }
-
-    button[onclick="oeffneModal()"]:active {
-        transform: translateY(4px);
-        box-shadow: none;
-    }
-
-    /* 6. POPUP (MODAL) */
-    .modal {
-        display: none; 
-        position: fixed; 
-        z-index: 9999; 
-        left: 0; top: 0;
-        width: 100%; height: 100%; 
-        background-color: rgba(0, 0, 0, 0.7); 
-        overflow: hidden;
-    }
-
-    .modal-content {
-        background-color: #ff80af; /* Dein Bubblegum-Rosa */
-        margin: 2vh auto; 
-        padding: 0; 
-        border: 15px solid #ffff00; /* Fetter Gelber Rahmen */
-        width: 85%; 
-        height: 90vh; 
-        border-radius: 40px; 
-        position: relative;
-        overflow: hidden; 
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Iframe Fix für volle Höhe */
-    #modalFormularContainer {
-        flex-grow: 1;
-        display: block;
-        height: 100%;
-    }
-
-    #modalFormularContainer iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: block;
-    }
-
-    /* Schließen-Button */
-    .close {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-        background-color: #32cd32; 
-        color: white;
-        width: 50px;
-        height: 50px;
-        line-height: 45px;
-        text-align: center;
-        font-size: 35px;
-        font-weight: bold;
-        border: 4px solid #ffffff;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 10001;
-    }
-</style>
 </head>
 <body>
-
+<div class="ueberschrift-container">
     <h1>Meine Tiptoi Medien</h1>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Bearbeiten</th>
-                <th>Themen</th>
-                <th>Seiten/Teile</th> 
-                <th>Status</th>
-                <th>Bewertung</th>
-                <th>Kommentar</th>
-                <th>Löschen</th>
-            </tr>
-        </thead>
-        <tbody> 
-    <?php
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $buch_id = $row['id']; 
-            
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+        <div class="such-container" style="text-align: center; margin: 20px 0;">
+        <input type="text" id="suchInput" 
+               placeholder="Nach Name, Thema oder Kommentar suchen..." 
+               style="width: 50%; max-width: 600px; padding: 12px 15px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;">
+    </div>
 
-            echo "<td>";
-            echo "<button onclick='oeffneBearbeitenModal(" . $row['id'] . ")'>Bearbeiten</button>";
-            echo "</td>";
-        
-            // --- START THEMEN-LOGIK ---
-            echo "<td>";
+    <?php if ($result->num_rows > 0): ?>
 
-            $themen_sql = "SELECT thema.name, thema.ID 
-                           FROM thema 
-                           JOIN buch_thema ON thema.ID = buch_thema.thema_id 
-                           WHERE buch_thema.buch_id = $buch_id";
-            $themen_res = $conn->query($themen_sql);
-            
-            $themen_links = [];
-            while($t_row = $themen_res->fetch_assoc()) {
-                $thema_name = $t_row['name'];
+        <table id="meineTabelle">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Name</th>
+                    <th onclick="sortTable(1)">Bearbeiten</th>
+                    <th onclick="sortTable(2)">Themen</th>
+                    <th onclick="sortTable(3)">Seiten/Teile</th>
+                    <th onclick="sortTable(4)">Status</th>
+                    <th onclick="sortTable(5)">Bewertung</th>
+                    <th onclick="sortTable(6)">Kommentar</th>
+                    <th onclick="sortTable(7)">Löschen</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            while($row = $result->fetch_assoc()) {
+                $buch_id = $row['id']; 
                 
-                // SCHRITT A: Das "&" für die Suche entfernen/ersetzen
-                // Wir machen aus "Kochen & Basteln" -> "Kochen Basteln"
-                $suche_sauber = str_replace('&', '', $thema_name);
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                echo "<td><button onclick='oeffneBearbeitenModal(" . $row['id'] . ")'>Bearbeiten</button></td>";
+
+                // === THEMEN-BLOCK (unverändert) ===
+                echo "<td>";
+                $themen_sql = "SELECT thema.name, thema.ID 
+                               FROM thema 
+                               JOIN buch_thema ON thema.ID = buch_thema.thema_id 
+                               WHERE buch_thema.buch_id = $buch_id";
+                $themen_res = $conn->query($themen_sql);
                 
-                $zusatz = "";
-            
-                // SCHRITT B: Die verfeinerten Suchkriterien (Switch-Block)
-                switch ($thema_name) {
-                    case 'Einsatzteams': 
-                        $zusatz = "Polizei Feuerwehr Rettung"; break;
-                    case 'Tiere': 
-                        $zusatz = "Bauernhof Zoo Safari Dschungel"; break;
-                    case 'Alltag': 
-                        $zusatz = "Zuhause Schule Kindergarten"; break;
-                    case 'Fahrzeuge': 
-                        $zusatz = "Autos Baustelle Rennwagen Züge"; break;
-                    case 'Wissenschaften': 
-                        $zusatz = "Weltraum Körper Experimente Technik"; break;
-                    case 'Lesen lernen': 
-                        $zusatz = "Erstleser Buchstaben Leselauscher"; break;
-                    case 'Fantasy': 
-                        $zusatz = "Drachen Elfen Einhorn Fabelwesen"; break;
-                    case 'Geschichte': 
-                        $zusatz = "Ritter Steinzeit Altes Rom Ägypten"; break;
-                    case 'Musik': 
-                        $zusatz = "Instrumente Lieder Orchester Musikschule"; break;
-                    case 'Sport': 
-                        $zusatz = "Fussball Turnen Tanzen Bewegung"; break;
-                    case 'Kochen & Basteln': 
-                        $zusatz = "Kuchen Suppen kinderleicht Schere Buntpapier Stifte"; break;
-                    case 'Länder & Kulturen': 
-                        $zusatz = "Weltatlas Europa Flaggen Weltreise"; break;
-                    case 'Zahlen & Rechnen': 
-                        $zusatz = "Zahlen Formen Geometrie Mathe"; break;
+                $themen_links = [];
+                while($t_row = $themen_res->fetch_assoc()) {
+                    $thema_name = $t_row['name'];
+                    $suche_sauber = str_replace('&', '', $thema_name);
+                    
+                    $zusatz = "";
+                    switch ($thema_name) {
+                        case 'Einsatzteams': $zusatz = "Polizei Feuerwehr Rettung"; break;
+                        case 'Tiere': $zusatz = "Bauernhof Zoo Safari Dschungel"; break;
+                        case 'Alltag': $zusatz = "Zuhause Schule Kindergarten"; break;
+                        case 'Fahrzeuge': $zusatz = "Autos Baustelle Rennwagen Züge"; break;
+                        case 'Wissenschaften': $zusatz = "Weltraum Körper Experimente Technik"; break;
+                        case 'Lesen lernen': $zusatz = "Erstleser Buchstaben Leselauscher"; break;
+                        case 'Fantasy': $zusatz = "Drachen Elfen Einhorn Fabelwesen"; break;
+                        case 'Geschichte': $zusatz = "Ritter Steinzeit Altes Rom Ägypten"; break;
+                        case 'Musik': $zusatz = "Instrumente Lieder Orchester Musikschule"; break;
+                        case 'Sport': $zusatz = "Fussball Turnen Tanzen Bewegung"; break;
+                        case 'Kochen & Basteln': $zusatz = "Kuchen Suppen kinderleicht Schere Buntpapier Stifte"; break;
+                        case 'Länder & Kulturen': $zusatz = "Weltatlas Europa Flaggen Weltreise"; break;
+                        case 'Zahlen & Rechnen': $zusatz = "Zahlen Formen Geometrie Mathe"; break;
+                    }
+                    
+                    $suchbegriff = trim("tiptoi " . $suche_sauber . " " . $zusatz);
+                    $themen_links[] = '<a href="https://www.google.com/search?q=' . urlencode($suchbegriff) . '" target="_blank">' . htmlspecialchars($thema_name) . '</a>';
                 }
-            
-                // SCHRITT C: Den finalen Suchbegriff zusammenbauen
-                $suche_sauber = str_replace('&', '', $thema_name);
-                // trim() entfernt doppelte Leerzeichen am Anfang oder Ende
-                $suchbegriff = trim("tiptoi " . $suche_sauber . " " . $zusatz);
+                echo implode(", ", $themen_links);
+                echo "</td>";
+                // === ENDE THEMEN ===
+
+                echo "<td>" . htmlspecialchars($row['seitenanzahl']) . "</td>";
+
+                $status_class = ($row['ausgeliehen'] == 1) ? "status-ausgeliehen" : "status-regal";
+                $status_text = ($row['ausgeliehen'] == 1) ? "Ausgeliehen (" . htmlspecialchars($row['ausgeliehen_von']) . ")" : "Im Regal";
+                echo "<td><span class='$status_class'>" . $status_text . "</span></td>";
                 
-                // Link generieren
-                $themen_links[] = '<a href="https://www.google.com/search?q=' . urlencode($suchbegriff) . '" target="_blank">' . htmlspecialchars($thema_name) . '</a>';
+                echo "<td>" . htmlspecialchars($row['bewertung_eltern']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['Kommentar']) . "</td>";
+
+                echo "<td><a href='loeschen.php?id=" . $row['id'] . "' onclick='return confirm(\"Wirklich löschen?\")' style='color:red; text-decoration:none;'>[X]</a></td>";
+                echo "</tr>";
             }
-            
-            echo implode(", ", $themen_links);
-            echo "</td>";
-            // --- ENDE THEMEN-LOGIK ---
-        
-            echo "<td>" . $row['seitenanzahl'] . "</td>";
+            ?>
+            </tbody>
+        </table>
 
+    <?php else: ?>
 
-            $status_class = ($row['ausgeliehen'] == 1) ? "status-ausgeliehen" : "status-regal";
-            $status_text = ($row['ausgeliehen'] == 1) ? "Ausgeliehen (" . htmlspecialchars($row['ausgeliehen_von']) . ")" : "Im Regal";
-            echo "<td><span class='$status_class'>" . $status_text . "</span></td>";
-            
-            echo "<td>" . htmlspecialchars($row['bewertung_eltern']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['Kommentar']) . "</td>";
+        <div style="text-align: center; margin: 60px 0; font-size: 18px; color: #666;">
+            <p><strong>Noch keine Medien eingetragen.</strong></p>
+            <p>Klicke auf "+ Neues Medium", um deine erste Tiptoi-Eintragung zu machen.</p>
+        </div>
 
-            echo "<td>";
-            echo "<a href='loeschen.php?id=" . $row['id'] . "' onclick='return confirm(\"Wirklich löschen?\")' style='color:red; text-decoration:none;'>[X]</a>";
-            echo "</tr>";
-
-        }
-    } else {
-        echo "<tr><td colspan='8'>Noch keine Medien eingetragen.</td></tr>";
-    }
-    ?>
-        </tbody>
-    </table>
+    <?php endif; ?>
 
     <br> <br> <button onclick="oeffneModal()">+ Neues Medium</button>
 
 
-<!-- Das Modal (Hintergrund) -->
 <div id="meinModal" class="modal">
 
-  <!-- Modal-Inhalt -->
   <div class="modal-content">
     <span class="close" onclick="schliesseModal()">&times;</span>
     <h2> </h2>
     
     <div id="modalFormularContainer">
-    <!-- Das Iframe füllt jetzt den Container dank CSS -->
     <iframe src="tiptoi_Eingabe.php"></iframe>
 </div>
   </div>
@@ -309,45 +135,111 @@ $result = $conn->query($sql);
 </div>
 
 <script>
+// Suche (Wieder eingefügt und abgesichert)
+document.getElementById("suchInput").addEventListener("keyup", function() {
+    let filter = this.value.toUpperCase();
+    let table = document.getElementById("meineTabelle");
+    if (!table) return;
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td");
+        let found = false;
+
+        for (let j = 0; j < td.length; j++) {
+            if (td[j]) {
+                let txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        tr[i].style.display = found ? "" : "none";
+    }
+});
+
+// Sortierfunktion (Wieder eingefügt und abgesichert)
+let sortDirection = {};
+
+function sortTable(n) {
+    let table = document.getElementById("meineTabelle");
+    if (!table) return;
+    let switching = true;
+    let dir = (sortDirection[n] === "asc") ? "desc" : "asc";
+    sortDirection[n] = dir;
+
+    while (switching) {
+        switching = false;
+        let rows = table.rows;
+        let shouldSwitch;
+
+        for (let i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+
+            let x = rows[i].getElementsByTagName("td")[n];
+            let y = rows[i + 1].getElementsByTagName("td")[n];
+
+            if (!x || !y) continue;
+
+            let xValue = x.textContent.trim();
+            let yValue = y.textContent.trim();
+
+            if (n === 3) {
+                xValue = parseFloat(xValue) || 0;
+                yValue = parseFloat(yValue) || 0;
+            }
+
+            if (dir === "asc") {
+                if (xValue > yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir === "desc") {
+                if (xValue < yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
+
 function oeffneModal(id = null) {
     var iframe = document.querySelector("#modalFormularContainer iframe");
     if (id) {
-        // Wenn eine ID übergeben wurde -> Bearbeiten-Modus
         iframe.src = "bearbeiten.php?id=" + id;
     } else {
-        // Keine ID -> Neu-Modus
         iframe.src = "tiptoi_Eingabe.php";
     }
     document.getElementById("meinModal").style.display = "block";
 }
 
-// Deine Bearbeiten-Funktion nutzt nun einfach die neue Logik
 function oeffneBearbeitenModal(id) {
     var iframe = document.querySelector("#modalFormularContainer iframe");
-    iframe.src = "bearbeiten.php?id=" + id; // Wir erstellen gleich die bearbeiten.php
+    iframe.src = "bearbeiten.php?id=" + id;
     document.getElementById("meinModal").style.display = "block";
 }
-
 
 function schliesseModal() {
     document.getElementById("meinModal").style.display = "none";
 }
 
-
 function nachSpeichernAktualisieren() {
-    // 1. Das Modal schließen
     schliesseModal();
-    
-    // 2. Die ganze Seite neu laden, um die Tabelle zu aktualisieren
     window.location.reload();
 }
-// Schließt das Modal auch, wenn man außerhalb des Kastens klickt
+
 window.onclick = function(event) {
     if (event.target == document.getElementById("meinModal")) {
         schliesseModal();
     }
 }
-
 </script>
 </body>
 </html>

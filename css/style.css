@@ -1,0 +1,245 @@
+/* ==========================================
+   SCHRIFTARTEN & ALLGEMEIN
+   ========================================== */
+   @import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@900&family=Fredoka:wght@400;700&display=swap');
+
+   body {
+       font-family: 'Fredoka', sans-serif;
+       background-color: #fcf6f0;
+       color: #4b4a4a;
+       margin: 0;
+       padding: 20px;
+   }
+   
+   /* Links allgemein */
+   a {
+       color: #32cd32;
+       text-decoration: none;
+       font-weight: bold;
+   }
+   a:hover {
+       text-decoration: underline;
+   }
+   a:active {
+       color: #ff69b4;        /* Pink beim Klicken */
+   }
+   
+   /* Überschrift-Container */
+   .ueberschrift-container {
+       background-color: #f7f5f2;
+       padding: 25px 20px;
+       border-radius: 8px;
+       margin: 0 auto 25px auto;
+       max-width: 800px;
+       text-align: center;
+       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+   }
+   .ueberschrift-container h1 {
+       color: #424242;
+       font-size: 28px;
+       margin: 0;
+       letter-spacing: 1px;
+   }
+   
+   /* ==========================================
+      TABELLE
+      ========================================== */
+   table {
+       width: 85%;
+       max-width: 1200px;
+       margin: 0 auto 30px auto;
+       border-collapse: separate;
+       border-spacing: 0;
+       background-color: #ffffff;
+       border: 1px solid #e0d9c8;
+       border-radius: 12px;
+       overflow: hidden;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+   }
+   th, td {
+       padding: 14px 12px;
+       text-align: left;
+       border-bottom: 1px solid #f0e9d8;
+   }
+   th {
+       background-color: #ff9800;
+       color: white;
+       font-weight: 700;
+       text-transform: uppercase;
+       font-size: 14px;
+       letter-spacing: 0.6px;
+   }
+   
+   /* Themen-Links: hellgrün + pink beim Klicken */
+   td a {
+       color: #32cd32;
+       font-weight: normal;
+       padding: 3px 7px;
+       border-radius: 3px;
+   }
+   td a:hover {
+       background-color: #e3f2fd;
+   }
+   td a:active {
+       color: #ff69b4;
+   }
+   
+   /* Löschen-Link [X] */
+   a[onclick*="confirm"] {
+       color: #e74c3c !important;
+       font-weight: bold;
+       font-size: 18px;
+       padding: 5px 9px;
+       border-radius: 3px;
+   }
+   a[onclick*="confirm"]:hover {
+       color: #c62828 !important;
+       background-color: #ffebee;
+   }
+   
+   /* ==========================================
+      BUTTONS
+      ========================================== */
+   button {
+       font-family: 'Fredoka', sans-serif;
+       font-weight: 600;
+       border: none;
+       border-radius: 6px;
+       cursor: pointer;
+       transition: all 0.2s;
+   }
+   
+   /* Bearbeiten-Button */
+   td button {
+       background-color: #2196F3;
+       color: white;
+       padding: 8px 14px;
+       font-size: 13px;
+   }
+   td button:hover {
+       background-color: #1976D2;
+       transform: translateY(-1px);
+   }
+   
+   /* + Neues Medium Button */
+   button[onclick="oeffneModal()"] {
+       background-color: #ffffff;
+       color: #ff9800;
+       border: 2px solid #ff9800;
+       padding: 12px 26px;
+       font-size: 16px;
+       margin: 20px auto;
+       display: block;
+   }
+   button[onclick="oeffneModal()"]:hover {
+       background-color: #fff3e0;
+       color: #f57c00;
+   }
+   
+   /* Speichern-Button */
+   button.speichern {
+       background-color: #000000;
+       color: #ffffff;
+       padding: 12px 28px;
+       font-size: 16px;
+       margin-top: 15px;
+       border: 2px solid #333;
+   }
+   button.speichern:hover {
+       background-color: #333;
+       transform: scale(1.03);
+   }
+   
+   /* ==========================================
+      STATUS – WICHTIG: Mehr Platz für "Ausgeliehen (Privat)"
+      ========================================== */
+   .status-regal,
+   .status-ausgeliehen {
+       display: inline-block;
+       padding: 7px 14px;           /* Mehr Innenabstand */
+       border-radius: 20px;
+       font-size: 14px;
+       min-width: 110px;            /* Mindestbreite */
+       text-align: center;
+       white-space: nowrap;         /* Verhindert Umbruch */
+   }
+   
+   .status-regal {
+       background-color: #e8f5e9;
+       color: #2e7d32;
+   }
+   
+   .status-ausgeliehen {
+       background-color: #ffebee;
+       color: #c62828;
+   }
+   
+   /* ==========================================
+      MODAL
+      ========================================== */
+   .modal {
+       display: none;
+       position: fixed;
+       z-index: 10000;
+       left: 0;
+       top: 0;
+       width: 100%;
+       height: 100%;
+       background-color: rgba(0,0,0,0.5);
+       overflow: auto;
+   }
+   .modal-content {
+       background-color: #fefefe;
+       margin: 5% auto;
+       padding: 25px;
+       border: 1px solid #888;
+       width: 55%;
+       max-width: 700px;
+       border-radius: 12px;
+       position: relative;
+       box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+   }
+   .close {
+       position: absolute;
+       right: 20px;
+       top: 15px;
+       font-size: 28px;
+       font-weight: bold;
+       color: #666;
+       cursor: pointer;
+   }
+   .close:hover {
+       color: #e74c3c;
+   }
+   
+   /* Iframe im Modal */
+   #modalFormularContainer iframe {
+       width: 100%;
+       height: 620px;
+       border: none;
+       border-radius: 8px;
+   }
+
+   .such-container {
+    text-align: right;
+    margin: 10px 0 20px 0;
+    padding-right: 8%;
+}
+
+#suchInput {
+    width: 220px;                    /* ca. 10-15% der Breite */
+    padding: 8px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: width 0.3s;
+}
+
+#suchInput:focus {
+    width: 280px;                    /* wird etwas breiter beim Klicken */
+    outline: none;
+    border-color: #ff9800;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}

@@ -1,14 +1,25 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "tiptoi");
+require_once __DIR__ . '/vendor/autoload.php';                              // Composer-Autoloader einbinden für:
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);                          // env.Datei mir Login-Daten laden
+$dotenv->load();
+
+$conn = new mysqli(                                                         // Variablen mit env-Inhalt verbinden
+    $_ENV['DB_HOST']
+    $_ENV['DB_USER']
+    $_ENV['DB_PASS']
+    $_ENV['DB_NAME']
+);
+
 
 if ($conn->connect_error) {
     die("Verbindung fehlgeschlagen: " . $conn->connect_error);
 }
 
-// 1. Welche ID soll bearbeitet werden?
+// Welche ID soll bearbeitet werden?
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// 2. Daten des Buches laden
+// Daten des Buches laden
 $result = $conn->query("SELECT * FROM buch WHERE id = $id");
 $buch = $result->fetch_assoc();
 
@@ -17,14 +28,14 @@ if (!$buch) {
     die("Medium nicht gefunden.");
 }
 
-// 3. Bereits verknüpfte Themen für dieses Buch holen (für die Checkboxen)
+// Bereits verknüpfte Themen für dieses Buch holen (für die Checkboxen)
 $aktuelle_themen_res = $conn->query("SELECT thema_id FROM buch_thema WHERE buch_id = $id");
 $ausgewaehlte_themen = [];
 while($t = $aktuelle_themen_res->fetch_assoc()) {
     $ausgewaehlte_themen[] = $t['thema_id'];
 }
 
-// 4. Speicher-Logik (UPDATE)
+// Speicher-Logik (UPDATE)
 if (isset($_POST['speichern'])) {
     $name = $conn->real_escape_string($_POST['name']);
     $seitenanzahl = (int)$_POST['seitenanzahl'];
