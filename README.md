@@ -21,13 +21,15 @@ Diese kleine App hilft mir nachzuverfolgen, welche Medien wir besitzen, und ob i
 
 ## Wie weit?
 Prototyp — läuft lokal. Geplante Erweiterung: 
-Suchfeld 
+API zum importieren der Daten aus externen Datenbanken
 
 ## Ziel
 Dieses Projekt entstand parallel zur Umschulung zur Fachinformatikerin AE 
-als praktische Anwendung von PHP, SQL und CRUD-Konzepten.
+als praktische Wiederholung von PHP, SQL und CRUD-Konzepten.
 
 ## API / Externe Anbindung
 -dynamischen Google-Suchanfragen, statt API
 Je nach Kategorie werden automatisch verfeinerte Suchbegriffe 
 generiert und als klickbarer Link ausgegeben.
+
+Rest folgt
