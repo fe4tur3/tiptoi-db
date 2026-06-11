@@ -1,5 +1,17 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "tiptoi");
+require_once __DIR__ . '/vendor/autoload.php';                              // Composer-Autoloader einbinden für:
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);                          // env.Datei mir Login-Daten laden
+$dotenv->load();
+
+$conn = new mysqli(                                                         // Variablen mit env-Inhalt verbinden
+    $_ENV['DB_HOST']
+    $_ENV['DB_USER']
+    $_ENV['DB_PASS']
+    $_ENV['DB_NAME']
+);
+
+
 
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];                                 // braucht keine Absicherung, da nur strings akzeptiert eigentlich
