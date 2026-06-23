@@ -32,4 +32,5 @@ als praktische Wiederholung von PHP, SQL und CRUD-Konzepten.
 Je nach Kategorie werden automatisch verfeinerte Suchbegriffe 
 generiert und als klickbarer Link ausgegeben.
 
-Rest folgt
+## Weitere vorgeschlagene Optimierung: 
+Umstellung der Datenbank-Anbindung auf PDO zur Erhöhung der Sicherheit
